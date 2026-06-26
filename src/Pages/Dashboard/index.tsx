@@ -1,4 +1,3 @@
-
 import {
   Card,
   CardContent,
@@ -89,4 +88,4 @@ export function Dashboard() {
       </SidebarInset>
     </SidebarProvider>
   )
-} 
+}
