@@ -12,8 +12,8 @@ export type Sale_carrinho = {
   product: string
   quantity: number
   amount: number
+  sector: string
 }
-
 function EditQuantityCell({
   row,
   onUpdate,
