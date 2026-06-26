@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+
 import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -15,11 +15,10 @@ import {
 } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/sidebarapp"
 import { Separator } from "@/components/ui/separator"
-import { useState } from "react"
+
 
 import { columns_Compras, type Sale_compras } from "./table_compras/dataTable_Compras"
 import { DataTable_Compras } from "./table_compras/columns_Compras"
-import { Dialogadd_carrinho } from "@/components/Dialog_app"
 
 const data: Sale_compras[] = [
   {

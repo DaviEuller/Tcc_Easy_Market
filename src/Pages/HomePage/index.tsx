@@ -14,8 +14,6 @@ import {
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidebarapp";
 import { Button } from "@/components/ui/button";
-import { Field } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
 import { Dialogadd_carrinho } from "@/components/Dialog_app"
 
 export function HomePage() {

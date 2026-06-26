@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidebarapp";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
   Building2,
@@ -26,7 +25,6 @@ import {
   Mail,
   MapPin,
   Package,
-  Plus,
 } from "lucide-react";
 
 type EmpresaData = {

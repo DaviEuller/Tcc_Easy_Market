@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/sidebarapp"
 import { Separator } from "@/components/ui/separator"
-import { Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import { useState } from "react"
 
 import { columns_Carrinho, type Sale_carrinho } from "./table_carrinho/columns_carrinho"
