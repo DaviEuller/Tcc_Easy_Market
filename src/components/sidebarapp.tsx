@@ -8,17 +8,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarHeader,
-  SidebarInset,
-  SidebarProvider,
   SidebarSeparator,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Link } from "react-router-dom";
 import {
   ChevronsUpDown,
   LayoutDashboard,
   BarChart2,
-  Globe,
   Search,
   ShoppingCart,
   ShoppingBag,
@@ -27,7 +23,6 @@ import {
   Bolt ,
   User2,
 } from "lucide-react";
-import { Chat } from "@phosphor-icons/react/dist/ssr";
 
 export function AppSidebar() {
   return (

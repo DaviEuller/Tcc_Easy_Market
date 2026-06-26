@@ -7,6 +7,7 @@ export type Sale_compras = {
   image: string
   product: string
   quantity: number
+  tracking_code: number
   amount: number
   status: "pendente" | "enviado" | "entregue" | "cancelado"
 }
@@ -32,7 +33,7 @@ export const columns_Compras: ColumnDef<Sale_compras>[] = [
     header: "Quantidade",
   },
   {
-    accessorKey: "Target",
+    accessorKey: "tracking_code",
     header: "Codigo de rastreamento",
   },
   {

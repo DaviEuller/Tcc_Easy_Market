@@ -1,5 +1,4 @@
 
-import { Link } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -13,7 +12,6 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidebarapp";
-import { Button } from "@/components/ui/button";
 
 
 import { columns, type Sale } from "./tables/columns_Clients";

@@ -216,7 +216,11 @@ export function DialogExcluirProduto({ produto, onDelete }: DialogExcluirProps) 
   )
 }
 
-export function Dialogadd_carrinho({ produto }: DialogExcluirProps) {
+type DialogAddCarrinhoProps = {
+  produto: Produto
+}
+
+export function Dialogadd_carrinho({ produto }: DialogAddCarrinhoProps) {
   const [open, setOpen] = useState(false)
 
 

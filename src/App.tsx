@@ -13,9 +13,9 @@ import { EmpresaPerfil_V } from "./Pages/perfil_empresa_visitante"
 import { PerfilUsuarioVisitante } from "./Pages/perfil_ususariov"
 import { Mensagens } from "./Pages/mensagem"
 import { Produto_detalhes } from "./Pages/produtos"
-import { Esqueceusenha } from "./Pages/recuperação_de_senha"
+import { Esqueceusenha } from "./Pages/recuperacao_de_senha"
 import { Config } from "./Pages/Config"
-import { CompraConfirmada } from "./Pages/confirmação_de_compra"
+import { CompraConfirmada } from "./Pages/confirmacao_de_compra"
 
 function App() {
   return (  
