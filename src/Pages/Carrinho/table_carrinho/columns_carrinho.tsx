@@ -89,6 +89,10 @@ export const columns_Carrinho = (
     },
   },
   {
+    accessorKey: "sector",
+    header: "Setor",
+  },
+  {
   id: "actions",
   header: "Ações",
   cell: ({ row }) => {
