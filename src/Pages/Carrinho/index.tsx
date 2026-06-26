@@ -25,8 +25,8 @@ import { QrCode } from "lucide-react"
 
 
 const initialData: Sale_carrinho[] = [
-  { id: "1", product: "Camisa Brasil", quantity: 1, sector:"Roupas",amount: 100.00 },
-  { id: "2", product: "ps6", quantity: 1, sector:"consoles",amount: 1000.00 },
+  { id: "1", product: "Camisa Brasil", quantity: 1, amount: 100.00, sector:"Roupas" },
+  { id: "2", product: "ps6", quantity: 1,amount: 1000.00, sector:"consoles" },
 ]
 
 export function CardCarrinho() {
