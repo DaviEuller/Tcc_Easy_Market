@@ -15,11 +15,12 @@ const itens = [
 const subtotal = itens.reduce((acc, i) => acc + i.quantidade * i.precoUnit, 0);
 const frete = 0;
 const total = subtotal + frete;
-const navigate = useNavigate();
+
 const fmt = (v: number) =>
   v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export function CompraConfirmada() {
+  const navigate = useNavigate();
   return (
     <SidebarProvider>
       <AppSidebar />
