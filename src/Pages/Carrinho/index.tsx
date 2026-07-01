@@ -8,12 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/sidebarapp"
+import { Navbar } from "@/components/sidebarapp"
 import { Separator } from "@/components/ui/separator"
 import {useNavigate} from "react-router-dom";
 import { useState } from "react"
@@ -54,15 +49,9 @@ const [parcelas, setParcelas] = useState(1)
 
   return (
     
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="flex h-12 items-center gap-2 border-b px-4">
-          <SidebarTrigger />
-          <span className="text-sm font-medium text-muted-foreground">
-            Carrinho
-          </span>
-        </header>
+    <>
+      <Navbar />
+
         <main className="flex flex-1 flex-col gap-4 p-4">
           <Card className="w-full h-full">
             <CardHeader>
@@ -284,7 +273,6 @@ const [parcelas, setParcelas] = useState(1)
             </CardContent>
           </Card>
         </main>
-      </SidebarInset>
-    </SidebarProvider>
+    </>
   )
 }

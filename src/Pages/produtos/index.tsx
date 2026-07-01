@@ -1,228 +1,279 @@
-import { useState } from "react";
-import { Star, Truck, ShoppingCart } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/sidebarapp";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-
-const produto = {
-  nome: "Camisa do Brasil",
-  preco: 100.0,
-  descricao:
-    "Camisa oficial da seleção brasileira com tecnologia de absorção de suor e tecido de alta performance.",
-  empresa: {
-    nome: "Easy Market Enterprise",
-    iniciais: "EM",
-    verificada: true,
-  },
-  avaliacao: 4.5,
-  totalAvaliacoes: 128,
-  tamanhos: ["P", "M", "G", "GG"],
-  avaliacoes: [
-    {
-      nome: "João Carlos",
-      iniciais: "JC",
-      nota: 5,
-      comentario: "Produto excelente, chegou rápido e a qualidade é muito boa!",
-    },
-    {
-      nome: "Maria Santos",
-      iniciais: "MS",
-      nota: 4,
-      comentario:
-        "Ótima camisa, tecido confortável e o tamanho bate certo com a tabela.",
-    },
-  ],
-};
-
-function StarRating({ nota, size = 16 }: { nota: number; size?: number }) {
-  return (
-    <div className="flex gap-0.5">
-      {[1, 2, 3, 4, 5].map((i) => (
-        <Star
-          key={i}
-          size={size}
-          className={
-            i <= Math.floor(nota)
-              ? "fill-amber-400 text-amber-400"
-              : "text-muted-foreground"
-          }
-        />
-      ))}
-    </div>
-  );
-}
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Minus, Plus, ShoppingCart, CheckCircle2 } from "lucide-react";
+import { Navbar } from "@/components/sidebarapp";
+import { Dialogadd_carrinho } from "@/components/Dialog_app";
+import { produtosApi, urlImagemProduto } from "@/services/api";
+import type { Produto } from "@/types/produto";
 
 export function Produto_detalhes() {
-  const [tamanhoSelecionado, setTamanhoSelecionado] = useState("M");
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
-  const parcelamento = (produto.preco / 3).toFixed(2);
+  const [produto, setProduto] = useState<Produto | null>(null);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState<string | null>(null);
+
+  // --- estado da compra ---
+  const [quantidade, setQuantidade] = useState(1);
+  const [dialogAberto, setDialogAberto] = useState(false);
+  const [comprando, setComprando] = useState(false);
+  const [compraConcluida, setCompraConcluida] = useState(false);
+  const [erroCompra, setErroCompra] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!id) return;
+
+    produtosApi
+      .buscarPorId(id)
+      .then(setProduto)
+      .catch((e) => setErro(e instanceof Error ? e.message : "Produto não encontrado"))
+      .finally(() => setCarregando(false));
+  }, [id]);
+
+  if (carregando) {
+    return (
+      <>
+        <Navbar />
+        <p className="text-center mt-10 text-muted-foreground">Carregando produto...</p>
+      </>
+    );
+  }
+
+  if (erro || !produto) {
+    return (
+      <>
+        <Navbar />
+        <div className="text-center mt-10 space-y-4">
+          <p className="text-destructive">{erro ?? "Produto não encontrado"}</p>
+          <Button variant="outline" onClick={() => navigate(-1)}>Voltar</Button>
+        </div>
+      </>
+    );
+  }
+
+  const estoqueDisponivel = produto.quantidade;
+  const total = produto.valor * quantidade;
+
+  function aumentarQuantidade() {
+    setQuantidade((q) => Math.min(q + 1, estoqueDisponivel));
+  }
+
+  function diminuirQuantidade() {
+    setQuantidade((q) => Math.max(q - 1, 1));
+  }
+
+  function abrirDialogCompra() {
+    setErroCompra(null);
+    setCompraConcluida(false);
+    setDialogAberto(true);
+  }
+
+  async function confirmarCompra() {
+    if (!produto) return;
+    setComprando(true);
+    setErroCompra(null);
+
+    try {
+      // Ajuste este método conforme o endpoint real da sua API de pedidos.
+      // Exemplo esperado: produtosApi.comprar(id, quantidade)
+      await produtosApi.comprar(produto._id, quantidade);
+
+      setCompraConcluida(true);
+      // Atualiza o estoque exibido localmente
+      setProduto((p) =>
+        p ? { ...p, quantidade: p.quantidade - quantidade } : p
+      );
+    } catch (e) {
+      setErroCompra(
+        e instanceof Error ? e.message : "Não foi possível concluir a compra."
+      );
+    } finally {
+      setComprando(false);
+    }
+  }
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="flex h-12 items-center gap-2 border-b px-4">
-          <SidebarTrigger />
-          <span className="text-sm font-medium text-muted-foreground">
-            {produto.nome}
-          </span>
-        </header>
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-background p-6">
+        <div className="mx-auto max-w-3xl">
+          <Card>
+            <CardHeader>
+              <img
+                src={
+                  produto.imagens.length > 0
+                    ? urlImagemProduto(produto._id, 0)
+                    : "./src/assets/placeholder.jpg"
+                }
+                alt={produto.nome}
+                className="w-full h-96 rounded-lg object-cover"
+              />
+              <CardTitle className="text-2xl mt-4">{produto.nome}</CardTitle>
+              <CardDescription>{produto.setor}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <p className="text-3xl font-bold">
+                {produto.valor.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })}
+              </p>
+              <p className="text-muted-foreground">
+                Quantidade disponível: {produto.quantidade}
+              </p>
 
-        <main className="flex flex-1 flex-col gap-6 p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Imagem do produto */}
-            <div className="flex flex-col gap-3">
-              <div className="aspect-square rounded-xl border bg-muted flex items-center justify-center overflow-hidden">
-                <img
-                  src="/placeholder-produto.jpg"
-                  alt={produto.nome}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = "none";
+              {/* Seletor de quantidade */}
+              <div className="flex items-center gap-4">
+                <span className="text-sm font-medium">Quantidade:</span>
+                <div className="flex items-center border rounded-md">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={diminuirQuantidade}
+                    disabled={quantidade <= 1}
+                  >
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <span className="w-10 text-center font-medium">{quantidade}</span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={aumentarQuantidade}
+                    disabled={quantidade >= estoqueDisponivel}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+
+              <p className="text-lg">
+                Total:{" "}
+                <span className="font-bold">
+                  {total.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </span>
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-3">
+                {/* Botão de comprar agora */}
+                <Dialog open={dialogAberto} onOpenChange={setDialogAberto}>
+                  <DialogTrigger asChild>
+                    <Button
+                      className="flex-1"
+                      disabled={estoqueDisponivel === 0}
+                      onClick={abrirDialogCompra}
+                    >
+                      <ShoppingCart className="h-4 w-4 mr-2" />
+                      {estoqueDisponivel === 0 ? "Sem estoque" : "Comprar agora"}
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    {!compraConcluida ? (
+                      <>
+                        <DialogHeader>
+                          <DialogTitle>Confirmar compra</DialogTitle>
+                          <DialogDescription>
+                            Revise os detalhes antes de finalizar.
+                          </DialogDescription>
+                        </DialogHeader>
+
+                        <div className="space-y-2 py-2">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Produto</span>
+                            <span className="font-medium">{produto.nome}</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Quantidade</span>
+                            <span className="font-medium">{quantidade}</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Valor unitário</span>
+                            <span className="font-medium">
+                              {produto.valor.toLocaleString("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                              })}
+                            </span>
+                          </div>
+                          <div className="flex justify-between text-base pt-2 border-t">
+                            <span className="font-semibold">Total</span>
+                            <span className="font-bold">
+                              {total.toLocaleString("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                              })}
+                            </span>
+                          </div>
+                        </div>
+
+                        {erroCompra && (
+                          <p className="text-sm text-destructive">{erroCompra}</p>
+                        )}
+
+                        <DialogFooter>
+                          <Button
+                            variant="outline"
+                            onClick={() => setDialogAberto(false)}
+                            disabled={comprando}
+                          >
+                            Cancelar
+                          </Button>
+                          <Button onClick={confirmarCompra} disabled={comprando}>
+                            {comprando ? "Processando..." : "Confirmar compra"}
+                          </Button>
+                        </DialogFooter>
+                      </>
+                    ) : (
+                      <div className="flex flex-col items-center text-center gap-3 py-4">
+                        <CheckCircle2 className="h-12 w-12 text-green-600" />
+                        <DialogTitle>Compra concluída!</DialogTitle>
+                        <DialogDescription>
+                          Seu pedido de {quantidade}x {produto.nome} foi realizado
+                          com sucesso.
+                        </DialogDescription>
+                        <Button onClick={() => setDialogAberto(false)} className="mt-2">
+                          Fechar
+                        </Button>
+                      </div>
+                    )}
+                  </DialogContent>
+                </Dialog>
+
+                {/* Botão para adicionar ao carrinho, mantido como já existia */}
+                <Dialogadd_carrinho
+                  produto={{
+                    id: produto._id,
+                    product: produto.nome,
+                    quantity: quantidade,
+                    sector: produto.setor,
+                    amount: produto.valor,
                   }}
                 />
               </div>
-              <div className="flex gap-2">
-                {[1, 2, 3].map((i) => (
-                  <div
-                    key={i}
-                    className="w-16 h-16 rounded-lg border bg-muted cursor-pointer hover:border-primary transition-colors"
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Informações do produto */}
-            <div className="flex flex-col gap-4">
-              {/* Empresa */}
-              <div className="flex items-center gap-2">
-                <Avatar className="h-7 w-7 text-xs">
-                  <AvatarFallback>{produto.empresa.iniciais}</AvatarFallback>
-                </Avatar>
-                <span className="text-sm font-medium text-primary">
-                  {produto.empresa.nome}
-                </span>
-                {produto.empresa.verificada && (
-                  <Badge variant="secondary" className="text-xs">
-                    Verificado
-                  </Badge>
-                )}
-              </div>
-
-              {/* Nome e avaliação */}
-              <div>
-                <h1 className="text-2xl font-semibold">{produto.nome}</h1>
-                <div className="flex items-center gap-2 mt-1">
-                  <StarRating nota={produto.avaliacao} />
-                  <span className="text-sm text-muted-foreground">
-                    {produto.avaliacao} ({produto.totalAvaliacoes} avaliações)
-                  </span>
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Preço */}
-              <div>
-                <p className="text-3xl font-semibold">
-                  R$ {produto.preco.toFixed(2).replace(".", ",")}
-                </p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  em até 3x de R$ {parcelamento.replace(".", ",")} sem juros
-                </p>
-              </div>
-
-              {/* Tamanho */}
-              <div>
-                <p className="text-sm text-muted-foreground mb-2">Tamanho</p>
-                <div className="flex gap-2">
-                  {produto.tamanhos.map((t) => (
-                    <button
-                      key={t}
-                      onClick={() => setTamanhoSelecionado(t)}
-                      className={`w-10 h-10 rounded-md border text-sm font-medium transition-colors ${
-                        tamanhoSelecionado === t
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "border-border hover:border-primary/50"
-                      }`}
-                    >
-                      {t}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Botões de ação */}
-              <div className="flex gap-3 mt-2">
-                <Button variant="outline" className="flex-1 gap-2">
-                  <ShoppingCart size={16} />
-                  Adicionar ao carrinho
-                </Button>
-                <Button className="flex-1">Comprar agora</Button>
-              </div>
-
-              {/* Frete */}
-              <p className="text-sm text-muted-foreground flex items-center gap-1.5">
-                <Truck size={14} />
-                Frete grátis para compras acima de R$ 150
-              </p>
-            </div>
-          </div>
-
-          {/* Descrição */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Descrição do produto</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {produto.descricao}
-              </p>
             </CardContent>
           </Card>
-
-          {/* Avaliações */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">
-                Avaliações ({produto.totalAvaliacoes})
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-4">
-              {produto.avaliacoes.map((av, i) => (
-                <div key={i} className="flex flex-col gap-2">
-                  {i > 0 && <Separator />}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-7 w-7 text-xs">
-                        <AvatarFallback>{av.iniciais}</AvatarFallback>
-                      </Avatar>
-                      <span className="text-sm font-medium">{av.nome}</span>
-                    </div>
-                    <StarRating nota={av.nota} size={13} />
-                  </div>
-                  <p className="text-sm text-muted-foreground pl-9">
-                    {av.comentario}
-                  </p>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </main>
-      </SidebarInset>
-    </SidebarProvider>
+        </div>
+      </div>
+    </>
   );
 }

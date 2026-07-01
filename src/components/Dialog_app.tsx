@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { ImagePicker } from "@/components/ui/ImagePicker"
 
 type Produto = {
   id: string
@@ -27,6 +28,7 @@ type Produto = {
 export function DialogCadastroProduto() {
   const [open, setOpen] = useState(false)
   const [form, setForm] = useState({ product: "", quantity: "", sector: "", amount: "" })
+  const [images, setImages] = useState<File[]>([])
 
   function handleSubmit() {
     console.log("Cadastrar:", form)
@@ -36,6 +38,7 @@ export function DialogCadastroProduto() {
   }
 
   return (
+
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Cadastrar Produto</Button>
@@ -45,6 +48,12 @@ export function DialogCadastroProduto() {
           <DialogTitle>Cadastrar Produto</DialogTitle>
           <DialogDescription>Preencha os dados do novo produto.</DialogDescription>
         </DialogHeader>
+
+        <ImagePicker
+          onImageSelect={(files) =>
+            setImages((prev) => [...prev, ...files])
+          }
+        />
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">

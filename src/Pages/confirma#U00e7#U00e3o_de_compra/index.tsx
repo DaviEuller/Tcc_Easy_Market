@@ -3,7 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Navbar } from "@/components/sidebarapp";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/sidebarapp";
 import {useNavigate} from "react-router-dom";
 
 const itens = [
@@ -19,12 +20,14 @@ const fmt = (v: number) =>
   v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export function CompraConfirmada() {
+
   const navigate = useNavigate();
   return (
-    <>
-      <Navbar />
-
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
         <header className="flex h-12 items-center gap-2 border-b px-4">
+          <SidebarTrigger />
           <span className="text-sm font-medium text-muted-foreground">
             Compra Confirmada
           </span>
@@ -186,6 +189,7 @@ export function CompraConfirmada() {
           </div>
         </div>
         </main>
-    </>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

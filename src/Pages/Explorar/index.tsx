@@ -2,11 +2,8 @@ import {useNavigate} from "react-router-dom";
 import {
   Card, CardContent, CardDescription, CardHeader, CardTitle,
 } from "@/components/ui/card";
-import {
-  SidebarInset, SidebarProvider, SidebarTrigger,
-} from "@/components/ui/sidebar";
 import { useState } from "react";
-import { AppSidebar } from "@/components/sidebarapp";
+import { Navbar } from "@/components/sidebarapp";
 import { SlidersHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
@@ -19,14 +16,11 @@ export function Explorar() {
   const navigate = useNavigate();
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-
-      <SidebarInset>
+    <>
+      <Navbar />
 
         {/* Header — botão de filtros e busca */}
         <header className="flex h-12 items-center gap-2 border-b px-4">
-          <SidebarTrigger />
           <span className="text-sm font-medium text-muted-foreground">
             Explorar
           </span>
@@ -147,7 +141,6 @@ export function Explorar() {
           </div>
 
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+    </>
   );
 }

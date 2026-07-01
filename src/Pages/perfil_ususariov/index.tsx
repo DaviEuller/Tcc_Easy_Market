@@ -2,15 +2,9 @@ import {
   Card,
   CardContent,
 } from "@/components/ui/card";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/sidebarapp";
+import { Navbar } from "@/components/sidebarapp";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import {
   MapPin,
   Star,
@@ -85,12 +79,10 @@ export function PerfilUsuarioVisitante() {
   }
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
+    <>
+      <Navbar />
+
         <header className="flex h-12 items-center gap-2 border-b px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="h-4" />
           <span className="text-sm font-medium text-muted-foreground">
             Perfil público
           </span>
@@ -229,7 +221,6 @@ export function PerfilUsuarioVisitante() {
           </div>
 
         </main>
-      </SidebarInset>
-    </SidebarProvider>
+    </>
   );
 }

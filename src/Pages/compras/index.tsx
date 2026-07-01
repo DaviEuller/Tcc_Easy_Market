@@ -7,12 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/sidebarapp"
+import { Navbar } from "@/components/sidebarapp"
 import { Separator } from "@/components/ui/separator"
 
 
@@ -42,17 +37,13 @@ const data: Sale_compras[] = [
 
 export function Compras() {
   return (
-    <SidebarProvider>
-      <AppSidebar />
+    <>
+      <Navbar />
 
-      <SidebarInset>
         <header className="flex h-12 items-center gap-2 border-b px-4">
-          <SidebarTrigger />
-          <span className="text-sm font-medium text-muted-foreground">
-            Minhas Compras
-          </span>
+
           <Field orientation="horizontal">
-            <Input type="search" placeholder="Pesquisar..." />
+            <Input type="search" className="my-4"placeholder="Pesquisar..." />
             <Button>Pesquisar</Button>
           </Field>
         </header>
@@ -71,7 +62,6 @@ export function Compras() {
             
           </Card>
         </main>
-      </SidebarInset>
-    </SidebarProvider>
+    </>
   )
 }

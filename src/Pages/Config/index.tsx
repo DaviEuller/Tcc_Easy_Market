@@ -7,13 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-
-import { AppSidebar } from "@/components/sidebarapp";
+import { Navbar } from "@/components/sidebarapp";
 import { Button } from "@/components/ui/button";
 
 import { useTheme } from "@/components/theme-provider";
@@ -40,11 +34,10 @@ export function Config() {
 
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
+    <>
+      <Navbar />
+
         <header className="flex h-12 items-center gap-2 border-b px-4">
-          <SidebarTrigger />
           <span className="text-sm font-medium text-muted-foreground">
             Configurações
           </span>
@@ -87,7 +80,6 @@ export function Config() {
           </Card>
 
         </main>
-      </SidebarInset>
-    </SidebarProvider>
+    </>
   );
 }

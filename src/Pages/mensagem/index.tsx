@@ -1,14 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/sidebarapp";
+import { Navbar } from "@/components/sidebarapp";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Search,
@@ -202,13 +196,11 @@ export function Mensagens() {
   }
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
+    <>
+      <Navbar />
+
         {/* Header */}
         <header className="flex h-12 items-center gap-2 border-b px-4 shrink-0">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="h-4" />
           <span className="text-sm font-medium text-muted-foreground">Mensagens</span>
           {conversas.reduce((acc, c) => acc + c.naoLidas, 0) > 0 && (
             <Badge className="ml-1 h-5 px-1.5 text-xs">
@@ -423,7 +415,6 @@ export function Mensagens() {
             )}
           </div>
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+    </>
   );
 }

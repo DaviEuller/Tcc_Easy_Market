@@ -5,12 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/sidebarapp";
+import { Navbar } from "@/components/sidebarapp";
 
 
 import { columns, type Sale } from "./tables/columns_Clients";
@@ -39,11 +34,10 @@ const data_produtos: Sale_produtos[] = [
 
 export function Dashboard() {
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
+    <>
+      <Navbar />
+
         <header className="flex h-12 items-center gap-2 border-b px-4">
-          <SidebarTrigger />
           <span className="text-sm font-medium text-muted-foreground">
             Dashboard
           </span>
@@ -85,7 +79,6 @@ export function Dashboard() {
           </Card>
  
         </main>
-      </SidebarInset>
-    </SidebarProvider>
+    </>
   )
 }
