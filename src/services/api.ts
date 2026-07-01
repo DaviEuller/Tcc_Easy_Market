@@ -43,4 +43,12 @@ export const produtosApi = {
   },
 
   listarSetores: () => apiFetch<string[]>("/produtos/setores"),
+
+  // Registra a compra de `quantidade` unidades do produto `id`.
+  // Ajuste o path/payload aqui caso o endpoint real do backend seja diferente.
+  comprar: (id: string, quantidade: number) =>
+    apiFetch<Produto>(`/produtos/${id}/comprar`, {
+      method: "POST",
+      body: JSON.stringify({ quantidade }),
+    }),
 };

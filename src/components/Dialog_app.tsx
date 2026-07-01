@@ -31,9 +31,10 @@ export function DialogCadastroProduto() {
   const [images, setImages] = useState<File[]>([])
 
   function handleSubmit() {
-    console.log("Cadastrar:", form)
+    console.log("Cadastrar:", form, "Imagens:", images)
     // TODO: chamar sua API aqui
     setForm({ product: "", quantity: "", sector: "", amount: "" })
+    setImages([])
     setOpen(false)
   }
 

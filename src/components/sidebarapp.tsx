@@ -14,12 +14,28 @@ import {
   User2,
   Menu,
   X,
+  type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// Um item de navegação dentro de um grupo com dropdown (ex: "Login" dentro de "Conta")
+interface NavItem {
+  label: string;
+  to: string;
+  icon: LucideIcon;
+}
+
+// Um grupo de navegação: ou é um link direto (tem `to`), ou é um dropdown (tem `items`)
+interface NavGroup {
+  label: string;
+  icon: LucideIcon;
+  to?: string;
+  items?: NavItem[];
+}
+
 // Itens agrupados por setor, para reduzir a quantidade de informação
 // visível de uma vez. Cada grupo vira um botão com dropdown no hover.
-const navGroups = [
+const navGroups: NavGroup[] = [
   {
     label: "Início",
     icon: LayoutDashboard,
@@ -52,7 +68,7 @@ const navGroups = [
 
 ];
 
-function NavGroupDesktop({ group }) {
+function NavGroupDesktop({ group }: { group: NavGroup }) {
   const Icon = group.icon;
 
   // Grupo de item único (ex: Início) — link direto, sem dropdown
@@ -83,7 +99,7 @@ function NavGroupDesktop({ group }) {
                    bg-popover p-1 opacity-0 shadow-md transition-all duration-150
                    group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
       >
-        {group.items.map(({ label, to, icon: ItemIcon }) => (
+        {(group.items ?? []).map(({ label, to, icon: ItemIcon }: NavItem) => (
           <Link
             key={to}
             to={to}
@@ -98,7 +114,7 @@ function NavGroupDesktop({ group }) {
   );
 }
 
-function NavGroupMobile({ group, onNavigate }) {
+function NavGroupMobile({ group, onNavigate }: { group: NavGroup; onNavigate: () => void }) {
   const [aberto, setAberto] = useState(false);
   const Icon = group.icon;
 
@@ -131,7 +147,7 @@ function NavGroupMobile({ group, onNavigate }) {
 
       {aberto && (
         <div className="ml-4 flex flex-col gap-1 border-l pl-2">
-          {group.items.map(({ label, to, icon: ItemIcon }) => (
+          {(group.items ?? []).map(({ label, to, icon: ItemIcon }: NavItem) => (
             <Button
               key={to}
               variant="ghost"
